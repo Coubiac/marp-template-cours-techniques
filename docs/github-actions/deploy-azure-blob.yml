@@ -14,13 +14,19 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      COURSE_SLUG: marp-template
-      COURSE_ENTRY: build/examples/template-demo.md
       STATIC_WEBSITE_ENDPOINT: ${{ vars.STATIC_WEBSITE_ENDPOINT }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Read course config
+        run: |
+          COURSE_SLUG=$(node -p "require('./course.config.json').COURSE_SLUG")
+          DEPLOY_SOURCE=$(node -p "require('./course.config.json').DEPLOY_SOURCE")
+          echo "COURSE_SLUG=${COURSE_SLUG}" >> "$GITHUB_ENV"
+          echo "DEPLOY_SOURCE=${DEPLOY_SOURCE}" >> "$GITHUB_ENV"
+          echo "COURSE_ENTRY=build/${DEPLOY_SOURCE}" >> "$GITHUB_ENV"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -79,7 +85,7 @@ jobs:
               --source "public/${COURSE_SLUG}" \
               --overwrite true \
               --auth-mode login
-    
+
       - name: Show deployed URL
         run: |
           SITE_URL="${STATIC_WEBSITE_ENDPOINT%/}/${COURSE_SLUG}/"
@@ -92,4 +98,3 @@ jobs:
           echo "[Ouvrir le support](${SITE_URL})" >> "$GITHUB_STEP_SUMMARY"
 
           echo "Support publié : ${SITE_URL}"
-              

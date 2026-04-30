@@ -110,6 +110,44 @@ npm run export:all
 
 Cette commande produit les exports HTML et PDF.
 
+## Déployer sur Azure Blob Storage
+
+Le workflow de déploiement est **désactivé par défaut** dans le dépôt template. Il est fourni comme exemple dans `docs/github-actions/deploy-azure-blob.yml` et doit être activé manuellement dans chaque dépôt de cours.
+
+> Le dépôt template public ne déclenche aucun déploiement automatique tant que le workflow n'est pas copié dans `.github/workflows/`.
+
+### Activer le déploiement
+
+```bash
+npm run init:deploy
+```
+
+Le script copie le workflow dans `.github/workflows/deploy-azure-blob.yml`, affiche les secrets et variables GitHub à créer, et indique le subject OIDC attendu pour la federated credential Azure.
+
+### Champs requis dans `course.config.json`
+
+| Champ | Rôle | Exemple |
+|---|---|---|
+| `COURSE_SLUG` | Sous-dossier de publication (`/$web/{slug}/`) | `azure-admin-m365` |
+| `DEPLOY_SOURCE` | Fichier source à déployer, relatif à la racine | `slides/00-introduction.md` |
+
+`COURSE_ENTRY` est calculé automatiquement par le workflow : `build/{DEPLOY_SOURCE}`.
+
+### Prérequis par dépôt de cours
+
+**Secrets GitHub** (`Settings › Secrets and variables › Actions › Secrets`) :
+
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+- `AZURE_STORAGE_ACCOUNT`
+
+**Variable GitHub** (`Settings › Secrets and variables › Actions › Variables`) :
+
+- `STATIC_WEBSITE_ENDPOINT` — URL de base du site statique Azure (ex. `https://moncompte.z6.web.core.windows.net`)
+
+**Federated credential Azure** : créer une credential OIDC sur l'application Entra ID avec le subject `repo:<owner>/<repo>:ref:refs/heads/main`. Le script `npm run init:deploy` détecte et affiche le subject exact depuis le remote Git.
+
 ## Créer un cours à partir du template
 
 Ce dépôt est conçu pour être utilisé comme **dépôt modèle GitHub** (_Use this template_). Pour chaque nouveau cours, créer un nouveau dépôt à partir de ce template plutôt que de modifier le dépôt d'origine.
