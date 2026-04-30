@@ -1,0 +1,16 @@
+{
+  "name": "marp-template-cours-techniques",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Template Marp reutilisable pour supports de cours techniques.",
+  "scripts": {
+    "render": "node scripts/render.mjs",
+    "preview": "npm run render && marp -s build --theme themes/coubiac.css",
+    "export:html": "npm run render && marp build/template-demo.md --theme themes/coubiac.css --html --allow-local-files -o dist/template-demo.html",
+    "export:pdf": "npm run render && marp build/template-demo.md --theme themes/coubiac.css --pdf --allow-local-files -o dist/template-demo.pdf",
+    "export:all": "npm run export:html && npm run export:pdf"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.0.0"
+  }
+}

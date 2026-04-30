@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 760" role="img" aria-labelledby="title desc">
+  <title id="title">Placeholder topologie reseau</title>
+  <desc id="desc">Schema pleine largeur de demonstration pour une topologie reseau.</desc>
+  <rect width="1500" height="760" fill="#f7f9fc"/>
+  <rect x="60" y="84" width="1380" height="590" rx="20" fill="#ffffff" stroke="#d9e0ea" stroke-width="4"/>
+  <g fill="none" stroke="#5e6a7d" stroke-width="7" stroke-linecap="round">
+    <path d="M248 388 H512"/>
+    <path d="M668 388 H832"/>
+    <path d="M988 388 H1252"/>
+    <path d="M750 388 V236"/>
+    <path d="M750 388 V540"/>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle">
+    <rect x="120" y="320" width="256" height="136" rx="16" fill="#eef4ff" stroke="#1457b8" stroke-width="4"/>
+    <text x="248" y="397" fill="#1457b8">Site A</text>
+    <rect x="512" y="320" width="156" height="136" rx="16" fill="#edf7fa" stroke="#008aa8" stroke-width="4"/>
+    <text x="590" y="397" fill="#008aa8">VPN</text>
+    <rect x="832" y="320" width="156" height="136" rx="16" fill="#edf7fa" stroke="#008aa8" stroke-width="4"/>
+    <text x="910" y="397" fill="#008aa8">FW</text>
+    <rect x="1124" y="320" width="256" height="136" rx="16" fill="#eef8f2" stroke="#247a52" stroke-width="4"/>
+    <text x="1252" y="397" fill="#247a52">Cloud</text>
+    <rect x="604" y="142" width="292" height="94" rx="16" fill="#fff4eb" stroke="#b85712" stroke-width="4"/>
+    <text x="750" y="199" fill="#b85712">Administration</text>
+    <rect x="604" y="540" width="292" height="94" rx="16" fill="#fff5f5" stroke="#b53636" stroke-width="4"/>
+    <text x="750" y="597" fill="#b53636">Journaux</text>
+  </g>
+</svg>

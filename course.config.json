@@ -1,0 +1,10 @@
+{
+  "AUTHOR": "Coubiac",
+  "COURSE_TITLE": "Administration Cloud et Infrastructure",
+  "COURSE_SUBTITLE": "Parcours technique réutilisable pour Microsoft 365, Azure, réseau, sécurité, Terraform, AWS, Linux et Windows Server.",
+  "COURSE_CONTEXT": "Module 01 · Fondations techniques",
+  "HEADER_CONTEXT": "{{COURSE_TITLE}} · {{COURSE_CONTEXT}}",
+  "YEAR": "2026",
+  "COPYRIGHT": "© {{YEAR}} {{AUTHOR}}. Tous droits réservés.",
+  "FOOTER": "{{COURSE_TITLE}} | © {{YEAR}} {{AUTHOR}}"
+}

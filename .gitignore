@@ -1,0 +1,10 @@
+node_modules/
+build/
+.DS_Store
+Thumbs.db
+.env
+.claude/
+dist/*
+!dist/template-demo.pdf
+!dist/template-demo.html
+
