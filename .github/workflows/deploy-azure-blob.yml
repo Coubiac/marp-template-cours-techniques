@@ -16,6 +16,7 @@ jobs:
     env:
       COURSE_SLUG: marp-template
       COURSE_ENTRY: build/examples/template-demo.md
+      STATIC_WEBSITE_ENDPOINT: ${{ vars.STATIC_WEBSITE_ENDPOINT }}
 
     steps:
       - name: Checkout
@@ -78,3 +79,17 @@ jobs:
               --source "public/${COURSE_SLUG}" \
               --overwrite true \
               --auth-mode login
+    
+      - name: Show deployed URL
+        run: |
+          SITE_URL="${STATIC_WEBSITE_ENDPOINT%/}/${COURSE_SLUG}/"
+
+          echo "### Support publié" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- URL : ${SITE_URL}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Slug : ${COURSE_SLUG}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Ouvrir le support](${SITE_URL})" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "Support publié : ${SITE_URL}"
+              
