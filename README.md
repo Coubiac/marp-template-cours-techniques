@@ -18,13 +18,16 @@ Le style est volontairement sobre, lisible en projection, et adapté à des suje
 |-- themes/
 |   `-- coubiac.css
 |-- assets/
-|   `-- brand/
-|       |-- logo-principal.svg
-|       `-- logo-compact.svg
-|-- examples/
+|   |-- brand/
+|   |   |-- logo-principal.svg
+|   |   `-- logo-compact.svg
+|   |-- screenshots/        # captures d'écran du cours
+|   `-- schemas/            # schémas et diagrammes
+|-- examples/               # démonstration du template uniquement
 |   `-- template-demo.md
-|-- build/
-`-- dist/
+|-- slides/                 # sources du cours réel (vides dans le template)
+|-- build/                  # généré par render.mjs — ne pas éditer
+`-- dist/                   # exports HTML / PDF finaux
 ```
 
 ## Installation
@@ -89,7 +92,7 @@ La commande génère d'abord les fichiers Markdown dans `build/`, puis lance le 
 npm run export:html
 ```
 
-La commande génère `build/template-demo.md`, puis produit `dist/template-demo.html`.
+La commande génère `build/examples/template-demo.md`, puis produit `dist/template-demo.html`.
 
 ## Exporter en PDF
 
@@ -97,7 +100,7 @@ La commande génère `build/template-demo.md`, puis produit `dist/template-demo.
 npm run export:pdf
 ```
 
-La commande génère `build/template-demo.md`, puis produit `dist/template-demo.pdf`.
+La commande génère `build/examples/template-demo.md`, puis produit `dist/template-demo.pdf`.
 
 ## Tout exporter
 
@@ -107,50 +110,104 @@ npm run export:all
 
 Cette commande produit les exports HTML et PDF.
 
-## Ajouter un nouveau cours
+## Créer un cours à partir du template
 
-1. Copier `examples/template-demo.md` vers un nouveau fichier, par exemple `examples/azure-admin.md`.
-2. Adapter le front matter Marp :
+Ce dépôt est conçu pour être utilisé comme **dépôt modèle GitHub** (_Use this template_). Pour chaque nouveau cours, créer un nouveau dépôt à partir de ce template plutôt que de modifier le dépôt d'origine.
 
-```yaml
+> `examples/` contient uniquement des démonstrations du template. Ne pas y créer de contenu de cours réel. Les vrais cours vont dans `slides/`.
+
+### Étapes
+
+**1. Créer un nouveau dépôt depuis le template GitHub.**
+
+**2. Adapter `course.config.json` :**
+
+```json
+{
+  "AUTHOR": "Prénom Nom",
+  "COURSE_TITLE": "Titre du cours",
+  "COURSE_SUBTITLE": "Sous-titre ou contexte du cours.",
+  "COURSE_CONTEXT": "Module 01 · Nom du module",
+  "HEADER_CONTEXT": "{{COURSE_TITLE}} · {{COURSE_CONTEXT}}",
+  "YEAR": "2026",
+  "COPYRIGHT": "© {{YEAR}} {{AUTHOR}}. Tous droits réservés.",
+  "FOOTER": "{{COURSE_TITLE}} | © {{YEAR}} {{AUTHOR}}"
+}
+```
+
+**3. Créer les fichiers Markdown dans `slides/` :**
+
+```text
+slides/
+  00-introduction.md
+  01-identites.md
+  02-groupes-roles.md
+assets/screenshots/   # captures d'écran du cours
+assets/schemas/       # schémas et diagrammes
+```
+
+**4. Utiliser ce front matter dans chaque fichier de cours :**
+
+```markdown
 ---
 marp: true
 theme: coubiac
 size: 16:9
 paginate: true
 header: "{{HEADER_CONTEXT}}"
-footer: "Nom du cours | Nom du module"
+footer: "{{FOOTER}}"
 ---
 ```
 
-3. Remplacer les contenus d'exemple par les slides du cours.
-4. Utiliser les variables `{{AUTHOR}}`, `{{COURSE_TITLE}}`, `{{COURSE_SUBTITLE}}`, `{{YEAR}}`, `{{COPYRIGHT}}` et `{{FOOTER}}` lorsque le contenu doit venir de `course.config.json`.
-5. Placer les captures dans `assets/screenshots/` et les schémas dans `assets/schemas/`.
-6. Générer les fichiers finaux :
+**5. Masquer le header et le footer sur la couverture :**
+
+```markdown
+<!-- _class: cover -->
+<!-- _paginate: false -->
+<!-- _header: "" -->
+<!-- _footer: "" -->
+
+# {{COURSE_TITLE}}
+```
+
+**Variables disponibles** (définies dans `course.config.json`) :
+
+| Variable | Valeur |
+|---|---|
+| `{{AUTHOR}}` | Nom de l'auteur |
+| `{{COURSE_TITLE}}` | Titre complet du cours |
+| `{{COURSE_SUBTITLE}}` | Sous-titre ou descriptif |
+| `{{YEAR}}` | Année |
+| `{{COPYRIGHT}}` | Mention légale complète |
+| `{{HEADER_CONTEXT}}` | Titre + contexte de module |
+| `{{FOOTER}}` | Footer standard titre + copyright |
+
+**6. Générer les fichiers intermédiaires :**
 
 ```bash
 npm run render
 ```
 
-7. Exporter avec Marp CLI depuis `build/`, par exemple :
+Le script lit `slides/` et `examples/`, substitue les variables, et écrit les résultats dans `build/` en conservant l'arborescence. Un fichier `slides/01-identites.md` produit donc `build/slides/01-identites.md`.
+
+**7. Exporter depuis `build/` :**
 
 ```bash
-npx marp build/azure-admin.md --theme themes/coubiac.css --html --allow-local-files -o dist/azure-admin.html
-npx marp build/azure-admin.md --theme themes/coubiac.css --pdf --allow-local-files -o dist/azure-admin.pdf
+# HTML (prévisualisation et projection)
+npx marp build/slides/01-identites.md --theme themes/coubiac.css --html --allow-local-files -o dist/01-identites.html
+
+# PDF (distribution stagiaires) — nécessite Chrome ou Edge installé
+npx marp build/slides/01-identites.md --theme themes/coubiac.css --pdf --allow-local-files -o dist/01-identites.pdf
 ```
 
-Pour utiliser le footer global défini dans `course.config.json`, écrire :
+Pour forcer un navigateur spécifique en cas de problème, utiliser le flag `--browser` :
 
-```yaml
-footer: "{{FOOTER}}"
+```bash
+npx marp build/slides/01-identites.md --theme themes/coubiac.css --pdf --allow-local-files --browser edge -o dist/01-identites.pdf
+npx marp build/slides/01-identites.md --theme themes/coubiac.css --pdf --allow-local-files --browser chrome -o dist/01-identites.pdf
 ```
 
-La couverture peut toujours masquer le header et le footer :
-
-```markdown
-<!-- _header: "" -->
-<!-- _footer: "" -->
-```
+> Les scripts `npm run export:*` définis dans `package.json` ciblent uniquement `examples/template-demo.md`. Pour un cours réel, adapter ces scripts dans le dépôt de cours afin d'exporter l'ensemble des fichiers de `slides/`, ou exécuter les commandes `npx marp` directement comme ci-dessus.
 
 ## Utiliser les gabarits
 

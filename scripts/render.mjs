@@ -77,7 +77,7 @@ const renderRoot = async (sourceRoot, variables) => {
 
   for (const sourcePath of markdownFiles) {
     const relativePath = path.relative(sourceDir, sourcePath);
-    const targetPath = path.join(buildDir, relativePath);
+    const targetPath = path.join(buildDir, sourceRoot, relativePath);
     const content = await readFile(sourcePath, "utf8");
     const rendered = renderContent(content, variables, sourcePath);
 
