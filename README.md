@@ -116,14 +116,6 @@ Le workflow de déploiement est **désactivé par défaut** dans le dépôt temp
 
 > Le dépôt template public ne déclenche aucun déploiement automatique tant que le workflow n'est pas copié dans `.github/workflows/`.
 
-### Activer le déploiement
-
-```bash
-npm run init:deploy
-```
-
-Le script copie le workflow dans `.github/workflows/deploy-azure-blob.yml`, affiche les secrets et variables GitHub à créer, et indique le subject OIDC attendu pour la federated credential Azure.
-
 ### Champs requis dans `course.config.json`
 
 | Champ | Rôle | Exemple |
@@ -133,7 +125,47 @@ Le script copie le workflow dans `.github/workflows/deploy-azure-blob.yml`, affi
 
 `COURSE_ENTRY` est calculé automatiquement par le workflow : `build/{DEPLOY_SOURCE}`.
 
-### Prérequis par dépôt de cours
+### Configuration automatique
+
+Pour configurer l'ensemble en une seule commande (workflow, secrets GitHub, variable GitHub, federated credential Azure) :
+
+**1. Créer `.deploy.local.env`** à la racine du dépôt (fichier non versionné, déjà dans `.gitignore`) :
+
+```
+AZURE_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+AZURE_TENANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+AZURE_SUBSCRIPTION_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+AZURE_STORAGE_ACCOUNT=nom-du-compte-storage
+STATIC_WEBSITE_ENDPOINT=https://moncompte.z6.web.core.windows.net
+AZURE_RESOURCE_GROUP=nom-du-resource-group
+AZURE_IDENTITY_NAME=nom-de-la-managed-identity
+```
+
+**2. Exécuter :**
+
+```bash
+npm run setup:deploy
+```
+
+Le script :
+
+- copie `docs/github-actions/deploy-azure-blob.yml` dans `.github/workflows/` si absent ;
+- crée les secrets GitHub via `gh secret set` (les valeurs ne sont jamais affichées en console) ;
+- crée la variable `STATIC_WEBSITE_ENDPOINT` via `gh variable set` ;
+- crée la federated credential OIDC sur la managed identity via `az identity federated-credential create` avec le subject `repo:<owner>/<repo>:ref:refs/heads/main` ;
+- affiche en sortie uniquement les noms configurés, le subject OIDC et l'URL finale.
+
+**Prérequis :** `gh` CLI authentifié (`gh auth login`) et `az` CLI authentifié (`az login`) avec accès en écriture à la managed identity.
+
+### Activation manuelle
+
+Si vous préférez configurer GitHub et Azure manuellement :
+
+```bash
+npm run init:deploy
+```
+
+Le script copie uniquement le workflow et affiche les secrets, la variable et le subject OIDC à créer à la main.
 
 **Secrets GitHub** (`Settings › Secrets and variables › Actions › Secrets`) :
 
@@ -144,9 +176,9 @@ Le script copie le workflow dans `.github/workflows/deploy-azure-blob.yml`, affi
 
 **Variable GitHub** (`Settings › Secrets and variables › Actions › Variables`) :
 
-- `STATIC_WEBSITE_ENDPOINT` — URL de base du site statique Azure (ex. `https://moncompte.z6.web.core.windows.net`)
+- `STATIC_WEBSITE_ENDPOINT` — URL de base du site statique Azure
 
-**Federated credential Azure** : créer une credential OIDC sur l'application Entra ID avec le subject `repo:<owner>/<repo>:ref:refs/heads/main`. Le script `npm run init:deploy` détecte et affiche le subject exact depuis le remote Git.
+**Federated credential Azure** : créer une credential OIDC sur la managed identity Entra ID avec le subject `repo:<owner>/<repo>:ref:refs/heads/main`.
 
 ## Créer un cours à partir du template
 

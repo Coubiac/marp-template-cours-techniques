@@ -21,6 +21,13 @@
   --bt-code-bg: #111827;
   --bt-code-ink: #f2f6ff;
   --bt-shadow: 0 8px 20px rgba(23, 32, 51, 0.10);
+  --chrome-left: 40px;
+  --chrome-right: 40px;
+  --chrome-top: 10px;
+  --chrome-bottom: 9px;
+  --chrome-footer-right: 92px;
+  --chrome-pagination-right: 64px;
+  --chrome-logo-right: 22px;
 }
 
 section {
@@ -39,8 +46,8 @@ section {
 section::before {
   content: "";
   position: absolute;
-  right: 22px;
-  bottom: 9px;
+  right: var(--chrome-logo-right);
+  bottom: var(--chrome-bottom);
   width: 32px;
   height: 16px;
   background-image: url("../assets/brand/logo-compact.svg");
@@ -52,8 +59,8 @@ section::before {
 }
 
 section::after {
-  right: 64px;
-  bottom: 9px;
+  right: var(--chrome-pagination-right);
+  bottom: var(--chrome-bottom);
   color: var(--bt-muted);
   font-size: 10px;
   opacity: 0.4;
@@ -69,17 +76,17 @@ footer {
 }
 
 header {
-  top: 10px;
-  right: 40px;
+  top: var(--chrome-top);
+  right: var(--chrome-right);
   left: auto;
   max-width: 620px;
   text-align: right;
 }
 
 footer {
-  bottom: 9px;
-  left: 40px;
-  right: 92px;
+  bottom: var(--chrome-bottom);
+  left: var(--chrome-left);
+  right: var(--chrome-footer-right);
 }
 
 h1,
@@ -582,11 +589,6 @@ section.code-small pre[is="marp-pre"] > * {
 
 section.tight {
   padding: 22px 30px 22px;
-}
-
-section.tight header,
-section.tight footer {
-  left: 30px;
 }
 
 section.tight h1 {
