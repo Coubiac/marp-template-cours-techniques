@@ -83,16 +83,13 @@ const main = async () => {
     return;
   }
 
-  const missingConfig = ["COURSE_SLUG", "DEPLOY_SOURCE"].filter((k) => !config[k]);
-  if (missingConfig.length > 0) {
-    console.error(
-      `[setup:deploy] Champs manquants dans course.config.json : ${missingConfig.join(", ")}`
-    );
+  if (!config.COURSE_SLUG) {
+    console.error("[setup:deploy] COURSE_SLUG manquant dans course.config.json.");
     process.exitCode = 1;
     return;
   }
 
-  const { COURSE_SLUG, DEPLOY_SOURCE } = config;
+  const { COURSE_SLUG } = config;
 
   // ── Lecture .deploy.local.env ─────────────────────────────────────────────
   let env;
@@ -142,7 +139,7 @@ const main = async () => {
   console.log(`[setup:deploy] Dépôt   : ${ownerRepo}`);
   console.log(`[setup:deploy] Branche : ${branch}`);
   console.log(`[setup:deploy] Slug    : ${COURSE_SLUG}`);
-  console.log(`[setup:deploy] Entrée  : build/${DEPLOY_SOURCE}`);
+  console.log("[setup:deploy] Sources : tous les fichiers build/slides/*.md");
   console.log(`[setup:deploy] Subject : ${oidcSubject}`);
 
   // ── Vérification des outils requis ────────────────────────────────────────

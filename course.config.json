@@ -7,6 +7,5 @@
   "YEAR": "2026",
   "COPYRIGHT": "© {{YEAR}} {{AUTHOR}}. Tous droits réservés.",
   "FOOTER": "{{COURSE_TITLE}} | © {{YEAR}} {{AUTHOR}}",
-  "COURSE_SLUG": "marp-template",
-  "DEPLOY_SOURCE": "examples/template-demo.md"
+  "COURSE_SLUG": "marp-template"
 }

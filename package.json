@@ -9,6 +9,7 @@
     "export:html": "npm run render && marp build/examples/template-demo.md --theme themes/coubiac.css --html --allow-local-files -o dist/template-demo.html",
     "export:pdf": "npm run render && marp build/examples/template-demo.md --theme themes/coubiac.css --pdf --allow-local-files --browser chrome -o dist/template-demo.pdf",
     "export:all": "npm run export:html && npm run export:pdf",
+    "deploy:build": "node scripts/build-deploy.mjs",
     "init:deploy": "node scripts/init-deploy.mjs",
     "setup:deploy": "node scripts/setup-deploy.mjs"
   },

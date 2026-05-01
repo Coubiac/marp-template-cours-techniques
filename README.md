@@ -116,14 +116,13 @@ Le workflow de déploiement est **désactivé par défaut** dans le dépôt temp
 
 > Le dépôt template public ne déclenche aucun déploiement automatique tant que le workflow n'est pas copié dans `.github/workflows/`.
 
-### Champs requis dans `course.config.json`
+### Champ requis dans `course.config.json`
 
 | Champ | Rôle | Exemple |
 |---|---|---|
 | `COURSE_SLUG` | Sous-dossier de publication (`/$web/{slug}/`) | `azure-admin-m365` |
-| `DEPLOY_SOURCE` | Fichier source à déployer, relatif à la racine | `slides/00-introduction.md` |
 
-`COURSE_ENTRY` est calculé automatiquement par le workflow : `build/{DEPLOY_SOURCE}`.
+Tous les fichiers `.md` présents dans `slides/` sont publiés automatiquement. Aucune liste manuelle n'est nécessaire.
 
 ### Configuration automatique
 
@@ -155,6 +154,8 @@ Le script :
 - crée la federated credential OIDC sur la managed identity via `az identity federated-credential create` avec le subject `repo:<owner>/<repo>:ref:refs/heads/main` ;
 - affiche en sortie uniquement les noms configurés, le subject OIDC et l'URL finale.
 
+À chaque déploiement, le workflow génère automatiquement un fichier HTML par `.md` dans `slides/` et une page `index.html` listant tous les supports.
+
 **Prérequis :** `gh` CLI authentifié (`gh auth login`) et `az` CLI authentifié (`az login`) avec accès en écriture à la managed identity.
 
 ### Activation manuelle
@@ -182,9 +183,9 @@ Le script copie uniquement le workflow et affiche les secrets, la variable et le
 
 ## Créer un cours à partir du template
 
-Ce dépôt est conçu pour être utilisé comme **dépôt modèle GitHub** (_Use this template_). Pour chaque nouveau cours, créer un nouveau dépôt à partir de ce template plutôt que de modifier le dépôt d'origine.
+Ce dépôt est conçu pour être utilisé comme **dépôt modèle GitHub** (_Use this template_). **Un dépôt correspond à un cours complet.** Pour chaque nouveau cours, créer un nouveau dépôt à partir de ce template.
 
-> `examples/` contient uniquement des démonstrations du template. Ne pas y créer de contenu de cours réel. Les vrais cours vont dans `slides/`.
+> `examples/` contient uniquement des démonstrations du template et n'est **pas publié** lors du déploiement. Le contenu réel du cours va dans `slides/`.
 
 ### Étapes
 
@@ -201,20 +202,26 @@ Ce dépôt est conçu pour être utilisé comme **dépôt modèle GitHub** (_Use
   "HEADER_CONTEXT": "{{COURSE_TITLE}} · {{COURSE_CONTEXT}}",
   "YEAR": "2026",
   "COPYRIGHT": "© {{YEAR}} {{AUTHOR}}. Tous droits réservés.",
-  "FOOTER": "{{COURSE_TITLE}} | © {{YEAR}} {{AUTHOR}}"
+  "FOOTER": "{{COURSE_TITLE}} | © {{YEAR}} {{AUTHOR}}",
+  "COURSE_SLUG": "mon-cours-technique"
 }
 ```
 
 **3. Créer les fichiers Markdown dans `slides/` :**
 
+Un fichier par journée ou par grand module. Utiliser un préfixe numérique pour garantir l'ordre alphabétique :
+
 ```text
 slides/
   00-introduction.md
-  01-identites.md
-  02-groupes-roles.md
+  01-jour1-fondations.md
+  02-jour2-securite.md
+  03-jour3-automatisation.md
 assets/screenshots/   # captures d'écran du cours
 assets/schemas/       # schémas et diagrammes
 ```
+
+Tous les fichiers `.md` présents dans `slides/` sont publiés automatiquement par `npm run deploy:build`. L'ordre de la liste `index.html` suit l'ordre alphabétique des noms de fichiers.
 
 **4. Utiliser ce front matter dans chaque fichier de cours :**
 
@@ -260,24 +267,28 @@ npm run render
 
 Le script lit `slides/` et `examples/`, substitue les variables, et écrit les résultats dans `build/` en conservant l'arborescence. Un fichier `slides/01-identites.md` produit donc `build/slides/01-identites.md`.
 
-**7. Exporter depuis `build/` :**
+**7. Exporter en PDF (distribution stagiaires) :**
 
 ```bash
-# HTML (prévisualisation et projection)
-npx marp build/slides/01-identites.md --theme themes/coubiac.css --html --allow-local-files -o dist/01-identites.html
-
-# PDF (distribution stagiaires) — nécessite Chrome ou Edge installé
-npx marp build/slides/01-identites.md --theme themes/coubiac.css --pdf --allow-local-files -o dist/01-identites.pdf
+# Un fichier à la fois — nécessite Chrome ou Edge installé
+npx marp build/slides/01-jour1-fondations.md --theme themes/coubiac.css --pdf --allow-local-files -o dist/01-jour1-fondations.pdf
 ```
 
-Pour forcer un navigateur spécifique en cas de problème, utiliser le flag `--browser` :
+Pour forcer un navigateur spécifique :
 
 ```bash
-npx marp build/slides/01-identites.md --theme themes/coubiac.css --pdf --allow-local-files --browser edge -o dist/01-identites.pdf
-npx marp build/slides/01-identites.md --theme themes/coubiac.css --pdf --allow-local-files --browser chrome -o dist/01-identites.pdf
+npx marp build/slides/01-jour1-fondations.md --theme themes/coubiac.css --pdf --allow-local-files --browser chrome -o dist/01-jour1-fondations.pdf
 ```
 
-> Les scripts `npm run export:*` définis dans `package.json` ciblent uniquement `examples/template-demo.md`. Pour un cours réel, adapter ces scripts dans le dépôt de cours afin d'exporter l'ensemble des fichiers de `slides/`, ou exécuter les commandes `npx marp` directement comme ci-dessus.
+**8. Construire les supports web (déploiement) :**
+
+```bash
+npm run deploy:build
+```
+
+Le script génère `public/<COURSE_SLUG>/` avec un fichier HTML par slide et une page `index.html`. C'est ce dossier qui est uploadé vers Azure Blob Storage par le workflow CI.
+
+> Les scripts `npm run export:*` définis dans `package.json` ciblent uniquement `examples/template-demo.md`. Pour un cours réel, utiliser `npm run deploy:build` pour l'export web ou les commandes `npx marp` directement pour les PDF.
 
 ## Utiliser les gabarits
 

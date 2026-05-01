@@ -56,18 +56,18 @@ La slide doit rester lisible, même projetée en salle.
 
 ## Structure recommandée d'un cours
 
-Un vrai cours doit être placé dans `slides/`.
+Un dépôt correspond à un cours complet. Un vrai cours doit être placé dans `slides/`.
 
-Le dossier `examples/` sert uniquement à démontrer les gabarits du template. Il ne doit pas contenir de vrai cours.
+Le dossier `examples/` sert uniquement à démontrer les gabarits du template. Il ne doit pas contenir de vrai cours et n'est **pas publié** lors du déploiement.
 
-Structure recommandée :
+Créer un fichier par journée ou par grand module. Nommer les fichiers avec un préfixe numérique pour garantir l'ordre de publication :
 
 ```text
 slides/
   00-introduction.md
-  01-module-identites.md
-  02-module-groupes.md
-  03-module-securite.md
+  01-jour1-fondations-tenant-dns.md
+  02-jour2-identites-securite.md
+  03-jour3-automatisation-terraform.md
 
 tps/
   TP01-preparation-environnement.md
@@ -77,6 +77,8 @@ assets/
   screenshots/
   schemas/
 ```
+
+Tous les fichiers `.md` présents dans `slides/` sont publiés automatiquement par `npm run deploy:build`. L'ordre de la page `index.html` suit l'ordre alphabétique des noms de fichiers. Ne pas créer un dépôt par journée — tout le cours va dans un seul dépôt.
 
 ### Rôle des dossiers
 
@@ -108,8 +110,7 @@ Exemple :
   "YEAR": "2026",
   "COPYRIGHT": "© {{YEAR}} {{AUTHOR}}. Tous droits réservés.",
   "FOOTER": "{{COURSE_TITLE}} | © {{YEAR}} {{AUTHOR}}",
-  "COURSE_SLUG": "m365-cyberuniversit",
-  "DEPLOY_SOURCE": "slides/00-introduction.md"
+  "COURSE_SLUG": "m365-cyberuniversit"
 }
 ```
 
@@ -129,7 +130,6 @@ Variables courantes :
 {{COPYRIGHT}}
 {{FOOTER}}
 {{COURSE_SLUG}}
-{{DEPLOY_SOURCE}}
 ```
 
 Exemple :

@@ -23,10 +23,7 @@ jobs:
       - name: Read course config
         run: |
           COURSE_SLUG=$(node -p "require('./course.config.json').COURSE_SLUG")
-          DEPLOY_SOURCE=$(node -p "require('./course.config.json').DEPLOY_SOURCE")
           echo "COURSE_SLUG=${COURSE_SLUG}" >> "$GITHUB_ENV"
-          echo "DEPLOY_SOURCE=${DEPLOY_SOURCE}" >> "$GITHUB_ENV"
-          echo "COURSE_ENTRY=build/${DEPLOY_SOURCE}" >> "$GITHUB_ENV"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,32 +37,8 @@ jobs:
       - name: Render Markdown
         run: npm run render
 
-      - name: Prepare deploy folder
-        run: |
-          mkdir -p public/${COURSE_SLUG}
-
-          # Copier les assets dans le dossier publié
-          cp -R assets public/${COURSE_SLUG}/assets
-
-          # Copier le markdown généré et le thème dans une version temporaire adaptée au web
-          cp "${COURSE_ENTRY}" public/${COURSE_SLUG}/index.md
-          cp themes/coubiac.css public/${COURSE_SLUG}/coubiac.deploy.css
-
-          # Adapter les chemins relatifs pour la publication dans /${COURSE_SLUG}/
-          perl -pi -e 's#\.\./assets/#assets/#g' public/${COURSE_SLUG}/index.md
-          perl -pi -e 's#\.\./assets/#assets/#g' public/${COURSE_SLUG}/coubiac.deploy.css
-
-      - name: Export HTML
-        run: |
-          npx marp public/${COURSE_SLUG}/index.md \
-            --theme public/${COURSE_SLUG}/coubiac.deploy.css \
-            --html \
-            --allow-local-files \
-            -o public/${COURSE_SLUG}/index.html
-
-          # Supprimer les fichiers temporaires non nécessaires à la publication
-          rm public/${COURSE_SLUG}/index.md
-          rm public/${COURSE_SLUG}/coubiac.deploy.css
+      - name: Build deploy assets
+        run: npm run deploy:build
 
       - name: Azure login
         uses: azure/login@v2

@@ -19,16 +19,13 @@ const main = async () => {
     return;
   }
 
-  const missing = ["COURSE_SLUG", "DEPLOY_SOURCE"].filter((k) => !config[k]);
-  if (missing.length > 0) {
-    console.error(
-      `[init:deploy] Champs manquants dans course.config.json : ${missing.join(", ")}`
-    );
+  if (!config.COURSE_SLUG) {
+    console.error("[init:deploy] COURSE_SLUG manquant dans course.config.json.");
     process.exitCode = 1;
     return;
   }
 
-  const { COURSE_SLUG, DEPLOY_SOURCE } = config;
+  const { COURSE_SLUG } = config;
 
   try {
     await access(sourcePath);
@@ -48,7 +45,7 @@ const main = async () => {
   console.log("  Source  : docs/github-actions/deploy-azure-blob.yml");
   console.log("  Cible   : .github/workflows/deploy-azure-blob.yml");
   console.log(`  Slug    : ${COURSE_SLUG}`);
-  console.log(`  Entrée  : build/${DEPLOY_SOURCE}`);
+  console.log("  Sources : tous les fichiers build/slides/*.md (via npm run deploy:build)");
 
   console.log("");
   console.log("[init:deploy] Secrets GitHub à créer (Settings › Secrets and variables › Actions › Secrets) :");
