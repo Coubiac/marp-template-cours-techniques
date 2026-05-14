@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -109,6 +109,15 @@ const main = async () => {
   console.log(`[render] Rendered ${renderedFiles.length} file(s):`);
   for (const file of renderedFiles) {
     console.log(`[render] - ${file}`);
+  }
+
+  const assetsSource = path.join(rootDir, "assets");
+  const assetsTarget = path.join(buildDir, "assets");
+  try {
+    await cp(assetsSource, assetsTarget, { recursive: true });
+    console.log("[render] Copied assets/ → build/assets/");
+  } catch (err) {
+    if (err.code !== "ENOENT") throw err;
   }
 };
 
