@@ -372,6 +372,91 @@ Le footer et la pagination restent disponibles. Seul le logo compact est masqué
 
 ---
 
+<!-- _class: two-columns -->
+
+# Deux captures côte à côte
+
+<div class="grid columns">
+<div class="visual-frame">
+
+![Avant configuration](../assets/screenshots/portail-admin.svg)
+
+</div>
+<div class="visual-frame">
+
+![Après configuration](../assets/screenshots/portail-admin.svg)
+
+</div>
+</div>
+
+---
+
+<!-- _class: caption-bottom -->
+
+# Texte en haut, capture en bas
+
+- L'interface s'ouvre sur le tableau de bord principal.
+- Vérifier que le statut affiché correspond à l'état attendu.
+
+<div class="visual-frame">
+
+![Capture d'écran fictive](../assets/screenshots/portail-admin.svg)
+
+</div>
+
+---
+
+<!-- _class: caption-bottom -->
+
+# Texte en haut, deux captures en bas
+
+- Comparer les deux états côte à côte pour valider la configuration.
+
+<div class="grid columns">
+<div class="visual-frame">
+
+![Avant](../assets/screenshots/portail-admin.svg)
+
+</div>
+<div class="visual-frame">
+
+![Après](../assets/screenshots/portail-admin.svg)
+
+</div>
+</div>
+
+---
+
+<!-- _class: media-right screenshot-wide no-logo -->
+
+# Texte + deux captures empilées
+
+<div class="grid">
+<div>
+
+## Procédure en deux étapes
+
+1. Ouvrir le portail d'administration.
+2. Naviguer vers la section **Identités**.
+3. Appliquer la stratégie souhaitée.
+
+</div>
+<div class="stack">
+<div class="visual-frame">
+
+![Étape 1 — Portail admin](../assets/screenshots/portail-admin.svg)
+
+</div>
+<div class="visual-frame">
+
+![Étape 2 — Stratégie](../assets/screenshots/portail-admin.svg)
+
+</div>
+</div>
+</div>
+
+---
+
 <!-- _class: screenshot-full no-logo -->
 <!-- _footer: "" -->
 <!-- _header: "" -->

@@ -471,6 +471,7 @@ section.media-left h1::after,
 section.text-table h1::after,
 section.full-table h1::after,
 section.full-visual h1::after,
+section.caption-bottom h1::after,
 section.code h1::after {
   content: "";
   display: block;
@@ -522,6 +523,28 @@ section.media-right .visual-frame {
   min-height: 0;
 }
 
+section.two-columns .visual-frame {
+  height: 100%;
+  min-height: 0;
+}
+
+/* .stack : empile deux visual-frames verticalement dans une colonne media-right/left */
+section.media-right .stack,
+section.media-left .stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+section.media-right .stack .visual-frame,
+section.media-left .stack .visual-frame {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
 section.full-table table {
   font-size: 17px;
 }
@@ -547,6 +570,19 @@ section.full-visual .visual-frame svg {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+/* caption-bottom : h1 + contenu libre en haut, visuel(s) en bas */
+section.caption-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+section.caption-bottom > .visual-frame,
+section.caption-bottom > .grid {
+  flex: 1;
+  min-height: 0;
 }
 
 section.code pre {
