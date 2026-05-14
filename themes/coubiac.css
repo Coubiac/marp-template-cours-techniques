@@ -622,6 +622,7 @@ section.screenshot-full {
 
 section.screenshot-full header,
 section.screenshot-full footer,
+section.screenshot-full::before,
 section.screenshot-full::after {
   display: none;
 }

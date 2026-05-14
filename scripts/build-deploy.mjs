@@ -154,6 +154,7 @@ const main = async () => {
   console.log(`\n[deploy:build] ${mdFiles.length} fichier(s) → public/${COURSE_SLUG}/`);
 
   // ── Initialisation du dossier de sortie ───────────────────────────────────
+  await rm(slugDir, { recursive: true, force: true });
   await mkdir(tmpDir, { recursive: true });
 
   // ── Copie des assets ──────────────────────────────────────────────────────
